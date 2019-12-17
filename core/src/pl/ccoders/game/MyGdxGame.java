@@ -11,21 +11,38 @@ public class MyGdxGame extends ApplicationAdapter {
 	Texture background;
 	Texture ground;
 	Texture bubble;
-	
+
+	float centerPosition;
+	float movingSpeed=10;
+
+
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		background = new Texture("background.jpg");
 		ground = new Texture("ground.png");
 		bubble = new Texture("bubble.png");
+		centerPosition=Gdx.graphics.getWidth()/2-150;
 	}
 
 	@Override
 	public void render () {
+		if(Gdx.input.justTouched()){
+			movingSpeed=0;
+		}else{
+			if (centerPosition <= Gdx.graphics.getWidth()-400 && centerPosition>150){
+				centerPosition-=movingSpeed;
+			}else if (centerPosition<150){
+				centerPosition=150;
+				centerPosition+=movingSpeed;
+			}
+
+		}
 		batch.begin();
 		batch.draw(background, 0, 0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		batch.draw(ground, 0, 0,Gdx.graphics.getWidth(),150);
-		batch.draw(bubble, Gdx.graphics.getWidth()/2-150, 50,300,200);
+		batch.draw(bubble, centerPosition, 50,300,200);
 		batch.end();
 	}
 	
