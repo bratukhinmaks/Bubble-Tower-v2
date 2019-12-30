@@ -22,7 +22,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	float size;
 	float sizeIncSpeed;
 	boolean wasTouched, stop = false;
-	Bubble firstBubble;
+	Bubble currentBubble;
 	ArrayList<Bubble> bubbles;
 	int index;
 	boolean wasTouch, createNext;
@@ -36,13 +36,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		bubble = new Texture("bubble.png");
 		unitW = Gdx.graphics.getWidth()/maxX;
 		unitH = Gdx.graphics.getHeight()/maxY;
-		firstBubble = new Bubble(unitW, (maxX/2-3)*unitW,3*unitW);
-		firstBubble.size = 6*unitW;
-		firstBubble.inMotion = false;
+		currentBubble = new Bubble(unitW, (maxX/2-3)*unitW,3*unitW);
+		currentBubble.size = 6*unitW;
+		currentBubble.inMotion = false;
 		bubbles = new ArrayList<Bubble>();
-		bubbles.add(firstBubble);
-		currentPosX = firstBubble.posX - firstBubble.size;
-		currentPosY = firstBubble.posY - firstBubble.size/2 + unitW/2;
+		bubbles.add(currentBubble);
+		currentPosX = currentBubble.posX - currentBubble.size;
+		currentPosY = currentBubble.posY - currentBubble.size/2 + unitW/2;
 		createNext = true;
 		wasTouch = false;
 		bubbleNext = new Bubble(unitW, currentPosX, currentPosY);
@@ -71,11 +71,11 @@ public class MyGdxGame extends ApplicationAdapter {
 //				bubble.speedX = 5*unitW;
 //				bubble.speedY = 5*unitW;
 //			}
-//			else if(bubble.posX==currentPosX+firstBubble.size && bubble.posY==currentPosY) {
+//			else if(bubble.posX==currentPosX+currentBubble.size && bubble.posY==currentPosY) {
 //				bubble.speedX = -5*unitW;
 //				bubble.speedY = 5*unitW;
 //			}
-//			else if(bubble.posX==currentPosX+firstBubble.size/2 && bubble.posY == currentPosY+firstBubble.size/2) {
+//			else if(bubble.posX==currentPosX+currentBubble.size/2 && bubble.posY == currentPosY+currentBubble.size/2) {
 //				bubble.speedY = -5*unitW;
 //			}
 //			else if( wasTouch ) {
@@ -152,12 +152,13 @@ public class MyGdxGame extends ApplicationAdapter {
 //		bubbles.get(1).vel += bubbles.get(1).velSpeed;
 		batch.begin();
 		batch.draw(ground, 0, 0,unitW*maxX,3*unitW);
-		firstBubble.draw(batch);
+		currentBubble.draw(batch);
 		for(Bubble bubble: bubbles) {
-			if(!bubble.equals(firstBubble)) {
+			if(!bubble.equals(currentBubble)) {
 				bubble.move();
-				bubble.posX = firstBubble.posX + firstBubble.size/2*(1-(float)Math.cos(bubble.vel));
-				bubble.posY = firstBubble.posY + firstBubble.size/2*(1+(float)Math.sin(bubble.vel));
+				if(bubble.posX < currentBubble.posX + currentBubble.size/2) bubble.posX = currentBubble.posX - bubble.size + currentBubble.size/2*(1-(float)Math.cos(bubble.vel));
+				else bubble.posX = currentBubble.posX + currentBubble.size/2*(1-(float)Math.cos(bubble.vel));
+				bubble.posY = currentBubble.posY + currentBubble.size/2*(1+(float)Math.sin(bubble.vel));
 			}
 			bubble.draw(batch);
 		}
