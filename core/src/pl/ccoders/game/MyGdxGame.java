@@ -16,23 +16,31 @@ public class MyGdxGame extends ApplicationAdapter {
 	int maxUnits = 20;
 	float unit;
 	boolean wasTouched;
+	float posYSum;
 	Bubble currentBubble, nextBubble;
 	ArrayList<Bubble> bubbles;
 	ShapeRenderer shape;
+
+	public boolean checkBubblesCollision(Bubble bubble1, Bubble bubble2) {
+		float distance = (float)Math.sqrt(Math.pow(Math.abs(bubble1.posX-bubble2.posX), 2)+Math.pow(Math.abs(bubble1.posY-bubble2.posY), 2));
+		if( distance < bubble1.size + bubble2.size ) return true;
+		return false;
+	}
 
 
 	@Override
 	public void create () {
 		unit = Gdx.graphics.getWidth()/maxUnits;
-		currentBubble = new Bubble(unit, maxUnits/2*unit,3/2*unit);
+		currentBubble = new Bubble(unit, maxUnits/2*unit,3/2*unit, 0f, 0f);
 		currentBubble.size = 3*unit;
 		currentBubble.inMotion = false;
 		bubbles = new ArrayList<>();
 		bubbles.add(currentBubble);
-		nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY);
+		nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, 0f, 0f);
 		bubbles.add(nextBubble);
 		shape = new ShapeRenderer();
 		wasTouched = false;
+		posYSum = 0;
 	}
 
 	@Override
@@ -44,12 +52,25 @@ public class MyGdxGame extends ApplicationAdapter {
 			if(nextBubble.size < 4*unit) {
 				nextBubble.size += nextBubble.sizeIncSpeed;
 			}
-
+			for( Bubble bubble: bubbles) {
+				if(!bubble.equals(nextBubble)&&!bubble.equals(currentBubble)) {
+					if(checkBubblesCollision(nextBubble, bubble)) {
+						nextBubble.red = 1;
+						nextBubble.green = 0;
+						nextBubble.blue = 0;
+					}
+				}
+			}
 		}
 		else if (!Gdx.input.isTouched() && wasTouched) {
 			currentBubble = nextBubble;
-			nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY);
+			nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, bubbles.size()*unit/200, bubbles.size()/50);
 			bubbles.add(nextBubble);
+			if(currentBubble.posY > 20*unit) {
+				for(Bubble bubble: bubbles) {
+					bubble.posY -= currentBubble.posY-20*unit;
+				}
+			}
 			wasTouched = false;
 		}
 
