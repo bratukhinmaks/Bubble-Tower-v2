@@ -42,6 +42,7 @@ public class MyGdxGame extends ApplicationAdapter {
   TextButton.TextButtonStyle textButtonStyle;
   BitmapFont font;
   Stage stage;
+  Bonus bonus;
 
   public boolean checkBubblesCollision(Bubble bubble1, Bubble bubble2) {
     float distance = (float)Math.sqrt(Math.pow(Math.abs(bubble1.posX-bubble2.posX), 2)+Math.pow(Math.abs(bubble1.posY-bubble2.posY), 2));
@@ -81,7 +82,7 @@ public class MyGdxGame extends ApplicationAdapter {
     font.getData().setScale(5);
     textButtonStyle = new TextButton.TextButtonStyle();
     textButtonStyle.fontColor = Color.GREEN;
-    textButtonStyle.downFontColor = Color.WHITE;
+    textButtonStyle.downFontColor = Color.RED;
     textButtonStyle.font = font;
     restartButton = new TextButton("Restart the game", textButtonStyle);
     restartButton.setPosition(5*unit, 5*unit);
