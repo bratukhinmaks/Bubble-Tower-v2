@@ -22,10 +22,15 @@ public class Bubble {
     this.sizeIncSpeed = unit/50+sizeIncSpeedIncrease;
     this.size = unit/2;
     this.vel = 0f;
-    this.velSpeed = 1/20f+velSpeedIncrease;
+    this.velSpeed = 1/10f+velSpeedIncrease;
     this.red = (float)Math.random();
     this.blue = (float)Math.random();
     this.green = (float)Math.random();
+    if(this.red+this.green+this.blue <0.5) {
+      this.red = (float)Math.random();
+      this.blue = (float)Math.random();
+      this.green = (float)Math.random();
+    }
   }
 
   void draw(ShapeRenderer shape) {
@@ -36,10 +41,10 @@ public class Bubble {
   void move() {
     if(inMotion) {
       if(vel < 0) {
-        velSpeed = 1/20f+velSpeedIncrease;
+        velSpeed = 1/10f+velSpeedIncrease;
       }
       else if(vel > 3.1415) {
-        velSpeed = -1/20f+velSpeedIncrease;
+        velSpeed = -1/10f-velSpeedIncrease;
       }
     }
     vel +=velSpeed;

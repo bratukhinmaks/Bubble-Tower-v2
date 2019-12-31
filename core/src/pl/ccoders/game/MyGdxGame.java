@@ -35,7 +35,7 @@ public class MyGdxGame extends ApplicationAdapter {
   SpriteBatch batch;
   String result;
   BitmapFont resultText, gameOverText;
-  boolean isGameRunning;
+  boolean isGameRunning, isMenuShowed;
   Needle needles;
   float numberOfNeedles;
   TextButton restartButton;
@@ -72,10 +72,11 @@ public class MyGdxGame extends ApplicationAdapter {
     wasTouched = false;
     posYSum = 0;
     resultText = new BitmapFont();
-    isGameRunning = true;
+    isGameRunning = false;
+    isMenuShowed = true;
     gameOverText = new BitmapFont();
-    needles = new Needle(unit);
-    numberOfNeedles = Gdx.graphics.getHeight()/(5*unit);
+    needles = new Needle(unit, 3*unit);
+    numberOfNeedles = Gdx.graphics.getHeight()/(needles.height);
     font = new BitmapFont();
     font.getData().setScale(5);
     textButtonStyle = new TextButton.TextButtonStyle();
@@ -90,12 +91,13 @@ public class MyGdxGame extends ApplicationAdapter {
   @Override
   public void render () {
     batch.begin();
-    result = String.valueOf(bubbles.size()-2);
+    result = isMenuShowed?"":"Your score is "+(bubbles.size()-2);
     resultText.setColor(1,1,1,1);
-    resultText.getData().setScale(10);
-    resultText.draw(batch, result, 17*unit,35*unit);
+    resultText.getData().setScale(7);
+    resultText.draw(batch, result, 4*unit,35*unit);
     batch.end();
     if(isGameRunning) {
+      isMenuShowed = false;
       stage.clear();
       if(Gdx.input.isTouched()) {
         wasTouched = true;
@@ -117,7 +119,7 @@ public class MyGdxGame extends ApplicationAdapter {
       }
       else if (!Gdx.input.isTouched() && wasTouched) {
         currentBubble = nextBubble;
-        nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, bubbles.size()*unit/300, bubbles.size()/50);
+        nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, (bubbles.size()<60 ? bubbles.size() : 60)*unit/300, (bubbles.size()<20?bubbles.size():20)/250f);
         bubbles.add(nextBubble);
         if(currentBubble.posY > 20*unit) {
           for(Bubble bubble: bubbles) {
@@ -143,7 +145,9 @@ public class MyGdxGame extends ApplicationAdapter {
     else {
       batch.begin();
       gameOverText.getData().setScale(10);
-      gameOverText.draw(batch, "GAME OVER", 2*unit, 17*unit);
+      gameOverText.draw(batch, isMenuShowed? "Bubble Tower" : "GAME OVER", 2*unit, 17*unit);
+      if(isMenuShowed) restartButton.setText("Play the Game");
+      else restartButton.setText("Restart the game");
       restartButton.draw(batch, 1);
       batch.end();
       Gdx.input.setInputProcessor(stage);
@@ -166,7 +170,6 @@ public class MyGdxGame extends ApplicationAdapter {
         }
       });
     }
-
   }
 
   @Override
