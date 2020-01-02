@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.lang.Math;
 
-public class Bubble {
-  float size, sizeIncSpeed, posX, posY;
+public class Bubble extends Circle{
+  float sizeIncSpeed;
   boolean inMotion, inSizeInc;
   float vel, velSpeed;
-  float red,green,blue, sizeIncSpeedIncrease, velSpeedIncrease;
+  float sizeIncSpeedIncrease, velSpeedIncrease;
 
 
   Bubble(float unit, float posX, float posY, float sizeIncSpeedIncrease, float velSpeedIncrease) {
@@ -31,11 +31,6 @@ public class Bubble {
       this.blue = (float)Math.random();
       this.green = (float)Math.random();
     }
-  }
-
-  void draw(ShapeRenderer shape) {
-    shape.setColor(red, green, blue, 1);
-    shape.circle(posX, posY, size);
   }
 
   void move() {

@@ -2,6 +2,7 @@ package pl.ccoders.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,14 +44,17 @@ public class MyGdxGame extends ApplicationAdapter {
   BitmapFont font;
   Stage stage;
   Bonus bonus;
+  Preferences prefs;
+  int highScore = 0, currentScore;
+  boolean createBonus;
 
-  public boolean checkBubblesCollision(Bubble bubble1, Bubble bubble2) {
+  public boolean checkBubblesCollision(Circle bubble1, Circle bubble2) {
     float distance = (float)Math.sqrt(Math.pow(Math.abs(bubble1.posX-bubble2.posX), 2)+Math.pow(Math.abs(bubble1.posY-bubble2.posY), 2));
     if( distance < bubble1.size + bubble2.size ) return true;
     return false;
   }
 
-  public boolean checkCollision(Bubble bubble) {
+  public boolean checkCollision(Circle bubble) {
     if(bubble.posX-bubble.size < needles.length || bubble.posX + bubble.size > (20*unit - needles.length)) {
       return true;
     }
@@ -87,17 +91,28 @@ public class MyGdxGame extends ApplicationAdapter {
     restartButton = new TextButton("Restart the game", textButtonStyle);
     restartButton.setPosition(5*unit, 5*unit);
     stage = new Stage();
+    prefs = Gdx.app.getPreferences("gamePreferences");
+    createBonus = true;
   }
 
   @Override
   public void render () {
+    currentScore = bubbles.size()-2;
     batch.begin();
-    result = isMenuShowed?"":"Your score is "+(bubbles.size()-2);
+    result = isMenuShowed?"":"Your score is "+currentScore+"\nHigh score is " + highScore;
     resultText.setColor(1,1,1,1);
     resultText.getData().setScale(7);
     resultText.draw(batch, result, 4*unit,35*unit);
     batch.end();
     if(isGameRunning) {
+      if(bonus!=null && (checkBubblesCollision(currentBubble, bonus) || bonus.posY<0)) {
+        bonus = null;
+        createBonus = true;
+      }
+      if(Math.random() < 0.05 && createBonus) {
+        bonus = new Bonus(unit);
+        createBonus = false;
+      }
       isMenuShowed = false;
       stage.clear();
       if(Gdx.input.isTouched()) {
@@ -141,9 +156,18 @@ public class MyGdxGame extends ApplicationAdapter {
       for(int i = 0; i< numberOfNeedles+1; i++ ) {
         needles.draw(shape, i*5*unit);
       }
+      if(bonus != null) {
+        bonus.move();
+        bonus.draw(shape);
+      }
       shape.end();
     }
     else {
+      if (currentScore > highScore ) {
+        prefs.putInteger("highscore", currentScore);
+        prefs.flush();
+      }
+      highScore = prefs.getInteger("highscore");
       batch.begin();
       gameOverText.getData().setScale(10);
       gameOverText.draw(batch, isMenuShowed? "Bubble Tower" : "GAME OVER", 2*unit, 17*unit);
@@ -168,6 +192,7 @@ public class MyGdxGame extends ApplicationAdapter {
           wasTouched = false;
           posYSum = 0;
           isGameRunning = true;
+          createBonus = true;
         }
       });
     }
