@@ -36,10 +36,10 @@ public class Bubble extends Circle{
   void move() {
     if(inMotion) {
       if(vel < 0) {
-        velSpeed = 1/10f+velSpeedIncrease;
+        velSpeed = 1/15f+velSpeedIncrease;
       }
       else if(vel > 3.1415) {
-        velSpeed = -1/10f-velSpeedIncrease;
+        velSpeed = -1/15f-velSpeedIncrease;
       }
     }
     vel +=velSpeed;
