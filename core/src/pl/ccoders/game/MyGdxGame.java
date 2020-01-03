@@ -103,10 +103,13 @@ public class MyGdxGame extends ApplicationAdapter {
     createBonus = true;
     backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("level1.ogg"));
     backgroundMusic.setLooping(true);
+    backgroundMusic.setVolume(0.5f);
     positiveBonusMusic = Gdx.audio.newMusic(Gdx.files.internal("posBonMus.mp3"));
     positiveBonusMusic.setLooping(false);
+    positiveBonusMusic.setVolume(1f);
     negativeBonusMusic = Gdx.audio.newMusic(Gdx.files.internal("negBonMus.wav"));
     negativeBonusMusic.setLooping(false);
+    negativeBonusMusic.setVolume(1f);
     scoreInc = false;
     needlesLengthDec = false;
     scoreDec = false;
@@ -135,7 +138,7 @@ public class MyGdxGame extends ApplicationAdapter {
     resultText.getData().setScale(5);
     resultText.draw(batch, result, 6*unit,35*unit);
     batch.end();
-    if(isGameRunning) {    //GRA SIĘ ZACZĘłA
+    if(isGameRunning) {//GRA SIĘ ZACZĘłA
       backgroundMusic.play();
       if(bonus!=null && (checkBubblesCollision(currentBubble, bonus) || bonus.posY<0)) {
         if(checkBubblesCollision(currentBubble, bonus)) {
@@ -193,7 +196,7 @@ public class MyGdxGame extends ApplicationAdapter {
       }
       else if (!Gdx.input.isTouched() && wasTouched) {
         currentBubble = nextBubble;
-        nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, (bubbles.size()<55 ? bubbles.size() : 55)*unit/600, (bubbles.size()<15?bubbles.size():15)/250f);
+        nextBubble = new Bubble(unit, currentBubble.posX-currentBubble.size, currentBubble.posY, (bubbles.size()<55 ? bubbles.size() : 55)*unit/6000, (bubbles.size()<15?bubbles.size():15)/250f);
 //        if(velSpeedInc) {
 //          nextBubble.velSpeedIncrease += unit/300;
 //          velSpeedInc = false;

@@ -19,7 +19,7 @@ public class Bubble extends Circle{
     this.inSizeInc = false;
     this.sizeIncSpeedIncrease = sizeIncSpeedIncrease;
     this.velSpeedIncrease = velSpeedIncrease;
-    this.sizeIncSpeed = unit/50+sizeIncSpeedIncrease;
+    this.sizeIncSpeed = unit/30+sizeIncSpeedIncrease;
     this.size = unit/2;
     this.vel = 0f;
     this.velSpeed = 1/10f+velSpeedIncrease;
