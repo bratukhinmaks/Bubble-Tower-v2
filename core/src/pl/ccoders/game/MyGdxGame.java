@@ -212,12 +212,6 @@ public class MyGdxGame extends ApplicationAdapter {
           mNegativeBonusMusic.play();
         }
         switch (mBonusView.type) {
-//            case "velSpeedDec":
-//              velSpeedDec = true;
-//              break;
-//            case "velSpeedInc":
-//              velSpeedInc = true;
-//              break;
           case ConstUtils.SCORE_INC:
             scoreInc = true;
             break;
@@ -265,14 +259,6 @@ public class MyGdxGame extends ApplicationAdapter {
       mNextBubbleView = new BubbleView(unit, mCurrentBubbleView.posX - mCurrentBubbleView.size,
               mCurrentBubbleView.posY, (mBubbleViewArrayList.size() < 60 ? mBubbleViewArrayList.size() : 60) * unit / 600,
               (mBubbleViewArrayList.size() < 25 ? mBubbleViewArrayList.size() : 25) / 250f);
-//        if(velSpeedInc) {
-//          mNextBubbleView.velSpeedIncrease += unit/300;
-//          velSpeedInc = false;
-//        }
-//        else if(velSpeedDec) {
-//          mNextBubbleView.velSpeedIncrease -= unit/300;
-//          velSpeedDec = false;
-//        }
       mBubbleViewArrayList.add(mNextBubbleView);
       if (mCurrentBubbleView.posY > 20 * unit) {
         for (BubbleView bubble : mBubbleViewArrayList) {
