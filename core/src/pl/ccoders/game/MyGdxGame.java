@@ -1,6 +1,7 @@
 package pl.ccoders.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -15,141 +16,36 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.ArrayList;
 
+import pl.ccoders.game.model.GameModel;
 import pl.ccoders.game.utils.ConstUtils;
 import pl.ccoders.game.views.BonusView;
 import pl.ccoders.game.views.BubbleView;
 import pl.ccoders.game.views.CircleView;
+import pl.ccoders.game.views.GameView;
 import pl.ccoders.game.views.NeedleView;
 
 public class MyGdxGame extends ApplicationAdapter {
+  GameModel mGame = new GameModel();
 
-  private BubbleView mCurrentBubbleView, mNextBubbleView;
-  private BonusView mBonusView;
-  private NeedleView mNeedleView;
 
-  private ShapeRenderer mShapeRenderer;
-  private SpriteBatch mSpriteBatch;
-
-  private BitmapFont mResultTitleFont, mMenuTitleFont;
-  private TextButton mRestartButton;
-
-  private boolean isGameRunning, isMenuShowed;
-
-  private float numberOfNeedles;
-
-  private Stage mStage;
-  private Preferences mPrefs;
-
-  private Music mBackgroundMusic, mGameOverMusic, mPositiveBonusMusic, mNegativeBonusMusic;
-
-  private ArrayList<BubbleView> mBubbleViewArrayList;
-
-  private int maxUnits = 20;
-  private float unit;
   private boolean wasTouched;
-  private float posYSum;
-
-  private int highScore = 0, currentScore;
-  private boolean createBonus, scoreInc, scoreDec, needlesLengthDec, createObstacle;
-  private float bonusNeedlesLength;
-  private int bonusCurrentScore;
-  private int bubbleSizeForNeedles;
-  private float lineLength;
 
   @Override
   public void create() {
+    mGame.initGame();
 
-    mSpriteBatch = new SpriteBatch();
-    mShapeRenderer = new ShapeRenderer();
-    mStage = new Stage();
-
-    mPrefs = Gdx.app.getPreferences("gamePreferences");
-
-    unit = Gdx.graphics.getWidth() / maxUnits;
-    mNeedleView = new NeedleView(unit, 3 * unit);
-    numberOfNeedles = Gdx.graphics.getHeight() / (mNeedleView.height);
-
-    mCurrentBubbleView = new BubbleView(unit, maxUnits / 2 * unit, 3 / 2 * unit, 0f, 0f);
-    mCurrentBubbleView.size = 3 * unit;
-    mCurrentBubbleView.inMotion = false;
-    mBubbleViewArrayList = new ArrayList<>();
-    mBubbleViewArrayList.add(mCurrentBubbleView);
-    mNextBubbleView = new BubbleView(unit, mCurrentBubbleView.posX - mCurrentBubbleView.size, mCurrentBubbleView.posY, 0f, 0f);
-    mBubbleViewArrayList.add(mNextBubbleView);
     wasTouched = false;
-    posYSum = 0;
-
-    isGameRunning = false;
-    isMenuShowed = true;
-
-    createBonus = true;
-    scoreInc = false;
-    needlesLengthDec = false;
-    scoreDec = false;
-    createObstacle = false;
-    bonusNeedlesLength = 0;
-    bonusCurrentScore = 0;
-    bubbleSizeForNeedles = 0;
-    lineLength = 0 * unit;
-
-    initFonts();
-    initMusic();
   }
 
   @Override
   public void render() {
-    currentScore = mBubbleViewArrayList.size() - 2 + bonusCurrentScore;
-    if (scoreDec) {
-      if (currentScore >= 5) bonusCurrentScore -= 5;
-      else bonusCurrentScore -= currentScore;
-      scoreDec = false;
-    }
-
-    if (scoreInc) {
-      currentScore += 5;
-      scoreInc = false;
-    }
-
-    mSpriteBatch.begin();
-    String result = isMenuShowed ? "" : ConstUtils.YOUR_SCORE_IS + currentScore + ConstUtils.HIGH_SCORE_IS + highScore;
-    mResultTitleFont.draw(mSpriteBatch, result, 6 * unit, 35 * unit);
-    mSpriteBatch.end();
+    mGame.updateGame();
 
     if (isGameRunning) {//GRA SIĘ ZACZĘłA
       updateGameSession();
     } else {   //PRZEGRANIE(ALBO MENU - PRZY PIERWSZYM ODPALENIU GRY)
       updateGameMenu();
     }
-  }
-
-  private void initFonts() {
-    mResultTitleFont = new BitmapFont();
-    mResultTitleFont.setColor(1, 1, 1, 1);
-    mResultTitleFont.getData().setScale(5);
-
-    mMenuTitleFont = new BitmapFont();
-    mMenuTitleFont.getData().setScale(10);
-
-    BitmapFont restartButtonFont = new BitmapFont();
-    restartButtonFont.getData().setScale(5);
-    TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-    textButtonStyle.fontColor = Color.GREEN;
-    textButtonStyle.downFontColor = Color.RED;
-    textButtonStyle.font = restartButtonFont;
-    mRestartButton = new TextButton(ConstUtils.RESTART_THE_GAME, textButtonStyle);
-    mRestartButton.setPosition(5 * unit, 5 * unit);
-  }
-
-  private void initMusic() {
-    mBackgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("level1.ogg"));
-    mBackgroundMusic.setLooping(true);
-    mBackgroundMusic.setVolume(0.5f);
-    mPositiveBonusMusic = Gdx.audio.newMusic(Gdx.files.internal("posBonMus.mp3"));
-    mPositiveBonusMusic.setLooping(false);
-    mPositiveBonusMusic.setVolume(1f);
-    mNegativeBonusMusic = Gdx.audio.newMusic(Gdx.files.internal("negBonMus.wav"));
-    mNegativeBonusMusic.setLooping(false);
-    mNegativeBonusMusic.setVolume(1f);
   }
 
   private void updateGameMenu() {
@@ -181,9 +77,9 @@ public class MyGdxGame extends ApplicationAdapter {
         mCurrentBubbleView.size = 3 * unit;
         mCurrentBubbleView.inMotion = false;
         mNextBubbleView = new BubbleView(unit, mCurrentBubbleView.posX - mCurrentBubbleView.size, mCurrentBubbleView.posY, 0f, 0f);
-        mBubbleViewArrayList.clear();
-        mBubbleViewArrayList.add(mCurrentBubbleView);
-        mBubbleViewArrayList.add(mNextBubbleView);
+        mBubbleViewList.clear();
+        mBubbleViewList.add(mCurrentBubbleView);
+        mBubbleViewList.add(mNextBubbleView);
         mNeedleView.length = 3 * unit;
         wasTouched = false;
         posYSum = 0;
@@ -247,7 +143,7 @@ public class MyGdxGame extends ApplicationAdapter {
       if (checkCollision(mCurrentBubbleView) || checkCollision(mNextBubbleView)) {
         isGameRunning = false;
       }
-      for (BubbleView bubble : mBubbleViewArrayList) {
+      for (BubbleView bubble : mBubbleViewList) {
         if (!bubble.equals(mNextBubbleView) && !bubble.equals(mCurrentBubbleView)) {
           if (checkBubblesCollision(mNextBubbleView, bubble)) {
             isGameRunning = false;
@@ -257,11 +153,11 @@ public class MyGdxGame extends ApplicationAdapter {
     } else if (!Gdx.input.isTouched() && wasTouched) {
       mCurrentBubbleView = mNextBubbleView;
       mNextBubbleView = new BubbleView(unit, mCurrentBubbleView.posX - mCurrentBubbleView.size,
-              mCurrentBubbleView.posY, (mBubbleViewArrayList.size() < 60 ? mBubbleViewArrayList.size() : 60) * unit / 600,
-              (mBubbleViewArrayList.size() < 25 ? mBubbleViewArrayList.size() : 25) / 250f);
-      mBubbleViewArrayList.add(mNextBubbleView);
+              mCurrentBubbleView.posY, (mBubbleViewList.size() < 60 ? mBubbleViewList.size() : 60) * unit / 600,
+              (mBubbleViewList.size() < 25 ? mBubbleViewList.size() : 25) / 250f);
+      mBubbleViewList.add(mNextBubbleView);
       if (mCurrentBubbleView.posY > 20 * unit) {
-        for (BubbleView bubble : mBubbleViewArrayList) {
+        for (BubbleView bubble : mBubbleViewList) {
           bubble.posY -= mCurrentBubbleView.posY - 20 * unit;
         }
       }
@@ -271,16 +167,16 @@ public class MyGdxGame extends ApplicationAdapter {
     mNextBubbleView.move();
     mNextBubbleView.posX = mCurrentBubbleView.posX - mCurrentBubbleView.size * (float) Math.cos(mNextBubbleView.vel) - mNextBubbleView.size * (float) Math.cos(mNextBubbleView.vel);
     mNextBubbleView.posY = mCurrentBubbleView.posY + mCurrentBubbleView.size * (float) Math.sin(mNextBubbleView.vel) + mNextBubbleView.size * (float) Math.sin(mNextBubbleView.vel);
-    for (BubbleView bubble : mBubbleViewArrayList) {
+    for (BubbleView bubble : mBubbleViewList) {
       bubble.draw(mShapeRenderer);
     }
     if (mNeedleView.length <= 6 * unit && mNeedleView.length >= 3 / 2 * unit)
-      mNeedleView.length = 3 * unit + mBubbleViewArrayList.size() * unit / 15 + bonusNeedlesLength;
+      mNeedleView.length = 3 * unit + mBubbleViewList.size() * unit / 15 + bonusNeedlesLength;
     if (mNeedleView.length > 6 * unit) mNeedleView.length = 6 * unit;
     if (mNeedleView.length < 3 / 2 * unit) mNeedleView.length = 3 / 2 * unit;
     if (needlesLengthDec) {
       if (mNeedleView.length > 3 * unit) {
-        bonusNeedlesLength = -mBubbleViewArrayList.size() / 15 * unit - unit;
+        bonusNeedlesLength = -mBubbleViewList.size() / 15 * unit - unit;
       }
       needlesLengthDec = false;
     }

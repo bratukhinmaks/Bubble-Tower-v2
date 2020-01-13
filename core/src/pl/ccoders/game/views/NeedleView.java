@@ -16,4 +16,8 @@ public class NeedleView {
     pShapeRenderer.triangle(0, y1, 0, y1 + height, length, y1 + height / 2);
     pShapeRenderer.triangle(20 * unit, y1, 20 * unit, y1 + height, 20 * unit - length, y1 + height / 2);
   }
+
+  public void lengthUpdate(float pLength) {
+
+  }
 }
