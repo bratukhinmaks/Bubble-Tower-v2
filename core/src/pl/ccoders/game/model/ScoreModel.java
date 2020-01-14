@@ -22,7 +22,7 @@ public class ScoreModel {
   }
 
   public void updateScore(GameModel mGame) {
-    currentScore = mGame.getBubbleHandler().getmBubbleViewList().size() + 400 + mGame.getBonusHandler().getBonusCurrentScore();
+    currentScore = mGame.getBubbleHandler().getmBubbleViewList().size() - 2 + mGame.getBonusHandler().getBonusCurrentScore();
     if (mGame.getBonusHandler().isScoreDec()) {
       if (currentScore >= 5) mGame.getBonusHandler().bonusCurrentScore -= 5;
       else mGame.getBonusHandler().bonusCurrentScore -= currentScore;
