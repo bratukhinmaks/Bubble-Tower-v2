@@ -1,25 +1,9 @@
 package pl.ccoders.game.model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import pl.ccoders.game.activities.GameController;
-import pl.ccoders.game.utils.ConstUtils;
-import pl.ccoders.game.views.BonusView;
-import pl.ccoders.game.views.BubbleView;
-import pl.ccoders.game.views.CircleView;
 import pl.ccoders.game.views.GameView;
-import pl.ccoders.game.views.NeedleView;
 
 public class GameModel {
 
@@ -61,14 +45,14 @@ public class GameModel {
     private void updateGameSession() {
         musicHandler.playBackgroundMusic();
         bonusHandler.createBonus(this);
-        scoreHandler.updateScore(this);
-        fontHandler.updateTitles(this);
+        bubbleHandler.updateBubbles();
+        bubbleHandler.touchBubbleHandler(this);
         bonusHandler.handleBonusCatch(this);
         needleHandler.updateNeddles(this);
         bonusHandler.updateBonus();
         obstacleHandler.updateObstacle(this);
-        bubbleHandler.touchBubbleHandler(this);
-        bubbleHandler.updateBubbles();
+        scoreHandler.updateScore(this);
+        fontHandler.updateTitles(this);
     }
 
     private void updateGameMenu() {

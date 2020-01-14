@@ -1,5 +1,7 @@
 package pl.ccoders.game.model;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,8 @@ public class BubbleModel {
           }
         }
       }
-    } else if (mGame.getcGame().isTouched() && mGame.getcGame().getwasTouched()) {
+    } else if (!mGame.getcGame().isTouched() && mGame.getcGame().getwasTouched()) {
+      mGame.getcGame().setWasTouched(false);
       mCurrentBubbleView = mNextBubbleView;
       mNextBubbleView = new BubbleView(mGame.getUnit(), mCurrentBubbleView.posX - mCurrentBubbleView.size,
               mCurrentBubbleView.posY, (mBubbleViewList.size() < 60 ? mBubbleViewList.size() : 60) * mGame.getUnit() / 600,

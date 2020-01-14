@@ -12,7 +12,7 @@ public class GameController {
 
     public void initController() {
         isGameRunning = false;
-        isMenuShowed = true;
+        isMenuShowed = false;
         wasTouched = false;
         buttonPressed = false;
     }
@@ -21,12 +21,15 @@ public class GameController {
         wasTouched = false;
         isMenuShowed = false;
         isGameRunning = true;
+        buttonPressed = false;
     }
 
     public boolean isTouched() {
-        if(Gdx.input.isTouched()) wasTouched = true;
-        else wasTouched = false;
-        return true;
+        if(Gdx.input.isTouched()) {
+            wasTouched = true;
+            return true;
+        }
+        return false;
     }
 
     public boolean isButtonPressed(GameModel mGame) {
@@ -53,6 +56,9 @@ public class GameController {
         return wasTouched;
     }
 
+    public void setWasTouched(boolean pWasTouched) {
+        wasTouched = pWasTouched;
+    }
     public void setGameRunning(boolean pIsGameRunning) {
         isGameRunning = pIsGameRunning;
     }
