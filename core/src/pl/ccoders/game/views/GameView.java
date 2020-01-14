@@ -6,18 +6,18 @@ import pl.ccoders.game.model.GameModel;
 import pl.ccoders.game.utils.ConstUtils;
 
 public class GameView {
-    public void drawGame(GameModel mGame, GameController cGame) {
+    public void drawGame(GameModel mGame) {
         drawGameScore(mGame);
-        if(cGame.getIsGameRunning()) drawGameSession(mGame);
-        else drawMenu(mGame, cGame);
+        if(mGame.getcGame().getIsGameRunning()) drawGameSession(mGame);
+        else drawMenu(mGame);
     };
 
     private void drawGameScore(GameModel mGame) {
-        CharSequence chrs;
-        if(mGame.getFontHandler().getResult() == null ) chrs = "0";
-        else chrs = mGame.getFontHandler().getResult();
+        CharSequence gameScoreTitle;
+        if(mGame.getFontHandler().getResult() == null ) gameScoreTitle = "";
+        else gameScoreTitle = mGame.getFontHandler().getResult();
         mGame.getCanvasHandler().getmSpriteBatch().begin();
-        mGame.getFontHandler().getmResultTitleFont().draw(mGame.getCanvasHandler().getmSpriteBatch(), chrs , 6 * mGame.getUnit(), 35 * mGame.getUnit());
+        mGame.getFontHandler().getmResultTitleFont().draw(mGame.getCanvasHandler().getmSpriteBatch(), gameScoreTitle , 6 * mGame.getUnit(), 35 * mGame.getUnit());
         mGame.getCanvasHandler().getmSpriteBatch().end();
     }
 
@@ -40,9 +40,9 @@ public class GameView {
         mGame.getCanvasHandler().getmShapeRenderer().end();
     }
 
-    private void drawMenu(GameModel mGame, GameController cGame) {
+    private void drawMenu(GameModel mGame) {
         mGame.getCanvasHandler().getmSpriteBatch().begin();
-        mGame.getFontHandler().getmMenuTitleFont().draw(mGame.getCanvasHandler().getmSpriteBatch(), cGame.getIsMenuShowed() ? ConstUtils.APP_NAME : ConstUtils.GAME_OVER, 2 * mGame.getUnit(), 17 * mGame.getUnit());
+        mGame.getFontHandler().getmMenuTitleFont().draw(mGame.getCanvasHandler().getmSpriteBatch(), mGame.getcGame().getIsMenuShowed() ? ConstUtils.APP_NAME : ConstUtils.GAME_OVER, 2 * mGame.getUnit(), 17 * mGame.getUnit());
         mGame.getFontHandler().getmRestartButton().draw(mGame.getCanvasHandler().getmSpriteBatch(), 1);
         mGame.getCanvasHandler().getmSpriteBatch().end();
         mGame.getCanvasHandler().getmStage().draw();

@@ -39,7 +39,7 @@ public class GameModel {
     public void updateGame() {
         if(cGame.getIsGameRunning()) updateGameSession();
         else updateGameMenu();
-        vGame.drawGame(this, cGame);
+        vGame.drawGame(this);
     }
 
     private void updateGameSession() {
@@ -52,11 +52,11 @@ public class GameModel {
         bonusHandler.updateBonus();
         obstacleHandler.updateObstacle(this);
         scoreHandler.updateScore(this);
-        fontHandler.updateTitles(this);
     }
 
     private void updateGameMenu() {
         musicHandler.stopBackgroundMusic();
+        fontHandler.updateTitles(this);
         scoreHandler.updateHighscore();
         if(cGame.isButtonPressed(this)) {
             bubbleHandler.restartBubble(this);

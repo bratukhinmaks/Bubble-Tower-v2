@@ -12,7 +12,7 @@ public class GameController {
 
     public void initController() {
         isGameRunning = false;
-        isMenuShowed = false;
+        isMenuShowed = true;
         wasTouched = false;
         buttonPressed = false;
     }
