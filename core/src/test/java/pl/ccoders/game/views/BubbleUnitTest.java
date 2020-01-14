@@ -23,7 +23,7 @@ public class BubbleUnitTest {
     private NeedleModel testNeedle;
     private ObstacleModel testObstacle;
     private BonusModel testBonus;
-
+    private BubbleView mCurrentBubbleView;
 
     @Before
     public void setUp() {
@@ -34,6 +34,7 @@ public class BubbleUnitTest {
         testNeedle = new NeedleModel();
         testObstacle = new ObstacleModel();
         testBonus = new BonusModel();
+
     }
 
     @Test
@@ -44,42 +45,18 @@ public class BubbleUnitTest {
     }
 
     @Test
-    public void isScoreDec() {
+    public void isNeedleNull() {
         testBonus.initBonus();
-        boolean testedScoreDec = testBonus.scoreDec;
-        assertFalse(testedScoreDec);
+        float needleLength = 0;
+        assertEquals(needleLength, testBonus.bonusNeedlesLength, 0.1);
     }
-
 
     @Test
-    public void isFontWrightColor() {
-
+    public void isCurrentScoreNull() {
+        testBonus.initBonus();
+        int score = 0;
+        assertEquals(score, testBonus.bonusCurrentScore);
     }
 
-//    @Test(expected = IllegalArgumentException.class)
-//    public void shouldThrowsExceptionWhileAddingCurrencyWithNegativeRate() {
-//        currencyConverter.addCurrency("TEST", -1);
-//    }
-//
-//    @Test
-//    public void shouldConvertsFromOneCurrencyToAnother() {
-//        currencyConverter.addCurrency("TEST1", 1);
-//        currencyConverter.addCurrency("TEST2", 2);
-//        double result = currencyConverter.convert(10, "TEST1", "TEST2");
-//        assertEquals("Converting currencies failed", 20, result, DELTA);
-//    }
-//
-//    @Test
-//    public void shouldReturnsTheSameAmount() {
-//        currencyConverter.addCurrency("TEST", 2);
-//        double result = currencyConverter.convert(10, "TEST", "TEST");
-//        assertEquals("Converting currencies failed", 10, result, DELTA);
-//    }
-//
-//    @Test
-//    public void shouldReturnsEmptyCurrenciesArray() {
-//        assertArrayEquals("Returning empty currencies failed",
-//                new String[]{}, currencyConverter.getCurriencies());
-//    }
-}
 
+}
