@@ -8,14 +8,19 @@ import pl.ccoders.game.model.GameModel;
 import pl.ccoders.game.views.CircleView;
 
 public class GameController {
-    private boolean isGameRunning, isMenuShowed, wasTouched, isTouched, buttonPressed;
+    private boolean isGameRunning, isMenuShowed, wasTouched, buttonPressed;
 
     public void initController() {
         isGameRunning = false;
         isMenuShowed = true;
         wasTouched = false;
-        isTouched = false;
         buttonPressed = false;
+    }
+
+    public void initOnRestartGame() {
+        wasTouched = false;
+        isMenuShowed = false;
+        isGameRunning = true;
     }
 
     public boolean isTouched() {
@@ -25,9 +30,9 @@ public class GameController {
     }
 
     public boolean isButtonPressed(GameModel mGame) {
-        Gdx.input.setInputProcessor(mGame.getmStage());
-        mGame.getmStage().addActor(mGame.getmRestartButton());
-        mGame.getmRestartButton().addListener(new ClickListener() {
+        Gdx.input.setInputProcessor(mGame.getCanvasHandler().getmStage());
+        mGame.getCanvasHandler().getmStage().addActor(mGame.getFontHandler().getmRestartButton());
+        mGame.getFontHandler().getmRestartButton().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 buttonPressed = true;
@@ -50,13 +55,5 @@ public class GameController {
 
     public void setGameRunning(boolean pIsGameRunning) {
         isGameRunning = pIsGameRunning;
-    }
-
-    public void setMenuShowed(boolean pMenuShowed) {
-        isMenuShowed = pMenuShowed;
-    }
-
-    public void setWasTouched(boolean pWasTouched) {
-        wasTouched = pWasTouched;
     }
 }
